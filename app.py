@@ -22,20 +22,21 @@ def index():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    try:
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
 
+    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+    if existing_user:
+        error_message = "Username or email already exists. Please choose a different one."
+        return render_template('signup.html', error_message=error_message)
+
+    try:
         new_user = User(username=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
 
         return redirect(url_for('index'))
-
-    except IntegrityError:
-        db.session.rollback()
-        return "Username or email already exists. Please choose a different one."
 
     except Exception as e:
         db.session.rollback()
@@ -43,4 +44,4 @@ def signup():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=False)  # Ensure debug mode is off for production-like behavior
+    app.run(debug=False)

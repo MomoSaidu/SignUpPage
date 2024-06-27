@@ -6,7 +6,6 @@
     <title>Sign Up</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -65,7 +64,12 @@
 </head>
 <body>
     <div class="signup-container">
-        <h2>Sign Up</h2>
+        <h2 class="text-center">Sign Up</h2>
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
         <form action="/signup" method="post">
             <div class="form-group">
                 <label for="username">Username:</label>
