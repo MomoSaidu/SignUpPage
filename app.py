@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -31,6 +32,10 @@ def signup():
         db.session.commit()
 
         return redirect(url_for('index'))
+
+    except IntegrityError:
+        db.session.rollback()
+        return "Username or email already exists. Please choose a different one."
 
     except Exception as e:
         db.session.rollback()
